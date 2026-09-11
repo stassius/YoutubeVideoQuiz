@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Local Nano Quiz — English
 // @namespace    local.youtube.quiz.english
-// @version      0.3.2
+// @version      0.3.3
 // @description  Generate an interactive quiz from the current YouTube transcript using Chrome built-in Gemini Nano. No translation and no remote AI calls.
 // @match        https://www.youtube.com/watch*
 // @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YouTube-Local-Nano-Quiz_english.user.js
@@ -28,7 +28,7 @@ Quality:
 - Keep the key concept consistent across prompt, correctAnswers, and explanation. If the prompt asks about X but the answer explains Y, replace the whole question.
 - Write simply and kindly for children, without tricks.
 - For single_choice, exactly one option is correct and correctAnswers must copy it verbatim from options.
-- For true_false, use one precise statement and put only “True” or “False” in correctAnswers.
+- For true_false, prompt must be a complete testable statement that can naturally be judged “True” or “False”. Never use a question mark or a question beginning with “how”, “why”, “what”, “who”, “where”, “when”, or “which”. Use short_text or single_choice for such questions.
 - For short_text, each correctAnswers item must be a complete standalone answer, not one part of a list. Multiple items are allowed only as alternative complete phrasings.
 - Be concise: prompt up to 120 characters, 3–4 short options, no more than 4 correctAnswers, and explanation up to 100 characters. Do not repeat the prompt in explanation.
 - explanation must briefly support correctAnswers using the video material.
@@ -137,7 +137,7 @@ All questions, answer options, correct answers, and explanations must be in Engl
 {{transcript}}
 </transcript>
 
-Before returning JSON, apply the Subject boundary to every candidate. Then verify that prompt, correctAnswers, and explanation concern the same concept. Replace every doubtful candidate.
+Before returning JSON, apply the Subject boundary to every candidate. Then verify that prompt, correctAnswers, and explanation concern the same concept. Confirm that every true_false prompt is a statement, not a question; otherwise change its type or replace it. Replace every doubtful candidate.
 `.trim(),
 
     };

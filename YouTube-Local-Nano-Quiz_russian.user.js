@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Local Nano Quiz — Russian
 // @namespace    local.youtube.quiz
-// @version      0.3.2
+// @version      0.3.3
 // @description  Generate an interactive quiz from the current YouTube transcript using Chrome built-in Gemini Nano. No translation and no remote AI calls.
 // @match        https://www.youtube.com/watch*
 // @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YouTube-Local-Nano-Quiz_russian.user.js
@@ -28,7 +28,7 @@
 - Ключевое понятие должно совпадать во всём вопросе: нельзя спрашивать про X, а в correctAnswers или explanation отвечать про Y. При таком расхождении замени весь вопрос.
 - Пиши для ребёнка просто, спокойно и без подвохов.
 - В single_choice верен ровно один вариант, а correctAnswers дословно копирует его из options.
-- В true_false используй одно точное утверждение, а в correctAnswers только «Верно» или «Неверно».
+- В true_false prompt — только законченное проверяемое утверждение, которое естественно оценить как «Верно» или «Неверно». Запрещены вопросительный знак и вопросы со словами «как», «почему», «зачем», «что», «кто», «где», «когда», «какой». Такие вопросы оформляй как short_text или single_choice.
 - В short_text каждый элемент correctAnswers должен быть самостоятельным полным ответом, а не отдельной частью ответа. Несколько элементов — только альтернативные полные формулировки.
 - Пиши компактно: prompt до 120 символов, 3–4 коротких options, не более 4 correctAnswers, explanation до 100 символов. Не повторяй prompt в explanation.
 - explanation кратко подтверждает correctAnswers материалом видео.
@@ -137,7 +137,7 @@ ${QUIZ_RULES}
 {{transcript}}
 </transcript>
 
-Перед JSON примени «Границу темы» к каждому кандидату. Затем сверь prompt с correctAnswers и explanation: они должны говорить об одном и том же понятии. Все сомнительные кандидаты замени.
+Перед JSON примени «Границу темы» к каждому кандидату. Затем сверь prompt с correctAnswers и explanation: они должны говорить об одном и том же понятии. Убедись, что каждый true_false — утверждение, а не вопрос; иначе смени его тип или замени. Все сомнительные кандидаты замени.
 `.trim(),
 
     };
