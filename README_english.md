@@ -63,7 +63,7 @@ The optional [YoutubeFocusMode script](https://raw.githubusercontent.com/stassiu
 3. Keep Chrome open and connected to an unmetered network. Chrome automatically downloads the model on an eligible device.
 4. Open a YouTube page and click **Create quiz**. If the download is not complete, the script displays its progress.
 
-If **On-device AI** is not shown, update Chrome and check whether the device meets the requirements. Manage the model through Chrome’s regular settings, not experimental flags. See the [official Chrome Help article](https://support.google.com/chrome/answer/16961953?hl=en).
+If **On-device AI** is not shown, update Chrome and check whether the device meets the requirements.
 
 ## 4. Configure the number of questions
 
