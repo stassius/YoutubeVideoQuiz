@@ -23,6 +23,8 @@
 
 Исходный код находится в [репозитории YouTubeVideoQuiz](https://github.com/stassius/YoutubeVideoQuiz).
 
+Дополнительный скрипт [YoutubeFocusMode](https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YoutubeFocusMode.user.js) добавляет в верхнюю панель страницы просмотра переключатель режима фокусировки. Он скрывает чат, комментарии, Shorts, рекомендации, поиск и кнопки аккаунта. Видео, название, описание и блок викторины остаются видимыми.
+
 ### Прямая установка в Tampermonkey
 
 Это самый простой способ, если нужен только готовый скрипт:

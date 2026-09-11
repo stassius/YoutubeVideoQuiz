@@ -23,6 +23,8 @@ If userscripts do not run, open `chrome://extensions`, enable **Developer mode**
 
 The source code is in the [YouTubeVideoQuiz repository](https://github.com/stassius/YoutubeVideoQuiz).
 
+The optional [YoutubeFocusMode script](https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YoutubeFocusMode.user.js) adds a focus-mode toggle to the top bar of watch pages. It hides chat, comments, Shorts, recommendations, search, and account action buttons while leaving the video, title, description, and quiz visible.
+
 ### Direct installation in Tampermonkey
 
 This is the easiest option if you only need the ready-to-use script:
