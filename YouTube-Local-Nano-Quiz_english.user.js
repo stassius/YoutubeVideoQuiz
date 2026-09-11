@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YouTube Local Nano Quiz — English
 // @namespace    local.youtube.quiz.english
-// @version      0.3.1
+// @version      0.3.2
 // @description  Generate an interactive quiz from the current YouTube transcript using Chrome built-in Gemini Nano. No translation and no remote AI calls.
 // @match        https://www.youtube.com/watch*
 // @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YouTube-Local-Nano-Quiz_english.user.js
@@ -157,8 +157,6 @@ Before returning JSON, apply the Subject boundary to every candidate. Then verif
     let transientStatusTarget = null;
     let answerCheckQueue = Promise.resolve();
     let answerCheckSession = null;
-    let answerCheckSessionPromise = null;
-    let answerCheckSupportsConstraint = true;
 
     // ============================================================
     // LOGGING / SMALL HELPERS
@@ -258,12 +256,13 @@ Before returning JSON, apply the Subject boundary to every candidate. Then verif
 
     function clearGenerationContext() {
         generationEpoch++;
+        if (answerCheckSession && answerCheckSession !== generationSession) {
+            answerCheckSession.destroy?.();
+        }
         generationSession?.destroy?.();
-        answerCheckSession?.destroy?.();
         generationSession = null;
         answerCheckSession = null;
-        answerCheckSessionPromise = null;
-        answerCheckSupportsConstraint = true;
+        answerCheckQueue = Promise.resolve();
         cachedTranscript = '';
         cachedStudyChunks = [];
         studyChunkCursor = 0;
@@ -1548,15 +1547,6 @@ ${existingQuestions}
                 `${quiz.advanced.length} optional.${repairNote}${skippedNote}`
             );
 
-            const hasShortText = [...quiz.basic, ...quiz.advanced]
-                .some(question => question.type === 'short_text');
-            if (CONFIG.SEMANTIC_SHORT_TEXT_CHECK && hasShortText) {
-                // Warm the reusable checker in the background so the first
-                // answer does not pay the cloning cost after the click.
-                void getAnswerCheckSession(runEpoch).catch(error => {
-                    warn('Could not prewarm answer checker', error);
-                });
-            }
         } catch (error) {
             if (generationEpoch !== runEpoch) return;
             console.error('[Local Nano Quiz]', error);
@@ -1906,42 +1896,14 @@ ${existingQuestions}
 
     async function getAnswerCheckSession(expectedEpoch) {
         if (answerCheckSession) return answerCheckSession;
-        if (answerCheckSessionPromise) return await answerCheckSessionPromise;
-
-        const sourceSession = generationSession;
-        if (!sourceSession) {
+        if (generationEpoch !== expectedEpoch || !generationSession) {
             throw new DOMException('The quiz context is no longer available.', 'AbortError');
         }
 
-        const pending = (async () => {
-            let session;
-            try {
-                session = typeof sourceSession.clone === 'function'
-                    ? await sourceSession.clone()
-                    : await PAGE.LanguageModel.create();
-            } catch (error) {
-                if (!isRecoverableNanoError(error)) throw error;
-                warn('Could not clone quiz context; using an empty checker', error);
-                session = await PAGE.LanguageModel.create();
-            }
-
-            if (generationEpoch !== expectedEpoch) {
-                session.destroy?.();
-                throw new DOMException('The quiz context is no longer available.', 'AbortError');
-            }
-
-            answerCheckSession = session;
-            return session;
-        })();
-
-        answerCheckSessionPromise = pending;
-        try {
-            return await pending;
-        } finally {
-            if (answerCheckSessionPromise === pending) {
-                answerCheckSessionPromise = null;
-            }
-        }
+        // The generation session has already completed a model request and
+        // contains the transcript and generated questions. Reuse it directly:
+        // cloning here only moves cold-start latency to the first answer.
+        return generationSession;
     }
 
     async function semanticShortTextCheck(question, userAnswer) {
@@ -1962,26 +1924,16 @@ ${existingQuestions}
 
             let result;
             try {
-                result = answerCheckSupportsConstraint
-                    ? await session.prompt(prompt, {
-                        responseConstraint: { type: 'boolean' },
-                        omitResponseConstraintInput: true,
-                    })
-                    : await session.prompt(prompt);
+                // A plain request avoids a failed boolean-constrained request
+                // followed by a second full inference on affected Chrome builds.
+                result = await session.prompt(prompt);
             } catch (error) {
-                if (
-                    answerCheckSupportsConstraint &&
-                    (error?.name === 'NotSupportedError' || isRecoverableNanoError(error))
-                ) {
-                    // Remember this Chrome limitation; do not pay for the same
-                    // failed constrained request on every following answer.
-                    answerCheckSupportsConstraint = false;
-                    warn('Boolean constraint failed; using plain true/false output', error);
-                    result = await session.prompt(prompt);
-                } else if (isRecoverableNanoError(error)) {
-                    // Recreate only the small checker. The generation session
-                    // and the rendered quiz remain intact.
-                    answerCheckSession?.destroy?.();
+                if (isRecoverableNanoError(error)) {
+                    // Only the exceptional retry uses a clean session. Do not
+                    // destroy generationSession: the rendered quiz keeps it.
+                    if (answerCheckSession && answerCheckSession !== generationSession) {
+                        answerCheckSession.destroy?.();
+                    }
                     answerCheckSession = await PAGE.LanguageModel.create();
                     session = answerCheckSession;
                     result = await session.prompt(prompt);
