@@ -1,9 +1,11 @@
 // ==UserScript==
-// @name         YouTube Local Nano Quiz v2
+// @name         YouTube Local Nano Quiz — Russian
 // @namespace    local.youtube.quiz
-// @version      0.3.0
+// @version      0.3.1
 // @description  Generate an interactive quiz from the current YouTube transcript using Chrome built-in Gemini Nano. No translation and no remote AI calls.
 // @match        https://www.youtube.com/watch*
+// @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YouTube-Local-Nano-Quiz_russian.user.js
+// @updateURL    https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YouTube-Local-Nano-Quiz_russian.user.js
 // @run-at       document-idle
 // @grant        unsafeWindow
 // @sandbox      JavaScript
