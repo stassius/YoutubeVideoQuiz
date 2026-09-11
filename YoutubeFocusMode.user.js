@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YoutubeFocusMode
 // @namespace    local.youtube.focus-mode
-// @version      1.0.4
+// @version      1.0.5
 // @description  Adds a bilingual Focus Mode toggle to YouTube watch pages and hides distracting page elements.
 // @match        https://www.youtube.com/*
 // @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YoutubeFocusMode.user.js
@@ -123,9 +123,28 @@
                 box-sizing: border-box;
             }
 
+            /*
+             * YouTube creates the transcript inside #secondary. Keep that
+             * container rendered so the quiz can open and read the transcript,
+             * but remove it from the page layout and make it non-interactive.
+             */
+            html.${ACTIVE_CLASS} ytd-watch-flexy #secondary {
+                display: block !important;
+                position: fixed !important;
+                top: 56px !important;
+                right: 0 !important;
+                width: 400px !important;
+                min-width: 400px !important;
+                height: calc(100vh - 56px) !important;
+                margin: 0 !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                overflow: hidden !important;
+                z-index: -1 !important;
+            }
+
             html.${ACTIVE_CLASS} ytd-masthead #center,
             html.${ACTIVE_CLASS} ytd-masthead #end,
-            html.${ACTIVE_CLASS} ytd-watch-flexy #secondary,
             html.${ACTIVE_CLASS} ytd-watch-flexy #related,
             html.${ACTIVE_CLASS} ytd-watch-flexy ytd-comments,
             html.${ACTIVE_CLASS} ytd-watch-flexy ytd-live-chat-frame,
