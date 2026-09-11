@@ -7,7 +7,7 @@ A Tampermonkey userscript that creates a quiz from the transcript of the open Yo
 ## Requirements
 
 - A current desktop version of Google Chrome. Mobile Chrome is not supported.
-- At least 22 GB of free space on the drive containing the Chrome profile.
+- At least 22 GB of free space on the drive containing the Chrome profile. This is Chrome’s eligibility requirement for built-in AI, not the size of Gemini Nano itself: the downloaded model uses considerably less space.
 - A GPU with more than 4 GB of VRAM, or a CPU system with 16 GB of RAM and at least 4 cores.
 - An unmetered internet connection for the model’s initial download. The model runs locally after downloading.
 - A video with an available transcript or automatic captions.
@@ -44,6 +44,12 @@ You can also clone the [repository](https://github.com/stassius/YoutubeVideoQuiz
 3. Delete the default editor template.
 4. Open the downloaded language version in a text editor and copy all of its contents into the Tampermonkey editor.
 5. Save with `Ctrl+S` and make sure the script is enabled.
+
+### Updating the script
+
+1. Open **Tampermonkey → Dashboard**.
+2. Open the installed script and select **Check for updates** in its settings. The wording may vary slightly between Tampermonkey versions.
+3. If no update is found, open the direct link for the desired language version above again and confirm the update or reinstallation.
 
 ## 3. Enable Chrome’s local model
 
