@@ -10,8 +10,8 @@ https://github.com/user-attachments/assets/436d9860-91e0-4b7b-967e-b0ab67d12f27
 ## Requirements
 
 - A current desktop version of Google Chrome. Mobile Chrome is not supported.
-- At least 22 GB of free space on the drive containing the Chrome profile. This is Chrome’s eligibility requirement for built-in AI, not the size of Gemini Nano itself: the downloaded model uses considerably less space.
-- A GPU with more than 4 GB of VRAM, or a CPU system with 16 GB of RAM and at least 4 cores.
+- Approximately 20 GB of free space on the drive containing the Chrome profile. This is a download requirement, not the size of the model itself.
+- A device with sufficient performance. The on-device AI setting is only available on supported devices.
 - An unmetered internet connection for the model’s initial download. The model runs locally after downloading.
 - A video with an available transcript or automatic captions.
 
@@ -56,16 +56,14 @@ You can also clone the [repository](https://github.com/stassius/YoutubeVideoQuiz
 
 The optional [YoutubeFocusMode script](https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YoutubeFocusMode.user.js) adds a focus-mode toggle to the top bar of watch pages. It hides chat, comments, Shorts, recommendations, search, and account action buttons while leaving the video, title, description, and quiz visible.
 
-## 3. Enable Chrome’s local model
+## 3. Install Chrome’s local model
 
-1. Open `chrome://flags/#optimization-guide-on-device-model`.
-2. Set it to **Enabled**.
-3. Open `chrome://flags/#prompt-api-for-gemini-nano`.
-4. Select **Enabled multilingual**. If that option is unavailable, select **Enabled**.
-5. Click **Relaunch** or restart Chrome completely.
-6. Open a YouTube page and click **Create quiz**. The first run starts the Gemini Nano download and may take a while.
+1. Open the Chrome menu and select **More ⋮ → Settings → System**.
+2. Turn on **On-device AI**.
+3. Keep Chrome open and connected to an unmetered network. Chrome automatically downloads the model on an eligible device.
+4. Open a YouTube page and click **Create quiz**. If the download is not complete, the script displays its progress.
 
-You can check its state at `chrome://on-device-internals` under **Model Status**.
+If **On-device AI** is not shown, update Chrome and check whether the device meets the requirements. Manage the model through Chrome’s regular settings, not experimental flags. See the [official Chrome Help article](https://support.google.com/chrome/answer/16961953?hl=en).
 
 ## 4. Configure the number of questions
 
@@ -117,6 +115,7 @@ The script reads the transcript from the open YouTube page and passes it to Chro
 
 ## Chrome documentation
 
+- [Manage on-device generative AI models](https://support.google.com/chrome/answer/16961953?hl=en)
 - [Get started with built-in AI](https://developer.chrome.com/docs/ai/get-started)
 - [Prompt API documentation](https://developer.chrome.com/docs/ai/prompt-api)
 - [Manage Chrome’s built-in models](https://developer.chrome.com/docs/ai/understand-built-in-model-management)
