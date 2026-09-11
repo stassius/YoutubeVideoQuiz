@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         YoutubeFocusMode
 // @namespace    local.youtube.focus-mode
-// @version      1.0.3
+// @version      1.0.4
 // @description  Adds a bilingual Focus Mode toggle to YouTube watch pages and hides distracting page elements.
 // @match        https://www.youtube.com/*
 // @downloadURL  https://raw.githubusercontent.com/stassius/YoutubeVideoQuiz/main/YoutubeFocusMode.user.js
@@ -99,6 +99,28 @@
                 margin: 0;
                 accent-color: #065fd4;
                 cursor: pointer;
+            }
+
+            html.${ACTIVE_CLASS} ytd-watch-flexy:not([theater]):not([fullscreen]) {
+                --ytd-watch-flexy-sidebar-width: 0px !important;
+                --ytd-watch-flexy-sidebar-min-width: 0px !important;
+            }
+
+            html.${ACTIVE_CLASS} ytd-watch-flexy:not([theater]):not([fullscreen]) #columns {
+                display: block !important;
+                width: 100% !important;
+                min-width: 0 !important;
+                max-width: none !important;
+                box-sizing: border-box;
+            }
+
+            html.${ACTIVE_CLASS} ytd-watch-flexy:not([theater]):not([fullscreen]) #primary {
+                width: auto !important;
+                min-width: 0 !important;
+                max-width: 1280px !important;
+                margin-left: auto !important;
+                margin-right: auto !important;
+                box-sizing: border-box;
             }
 
             html.${ACTIVE_CLASS} ytd-masthead #center,
